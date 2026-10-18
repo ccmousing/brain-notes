@@ -7,9 +7,9 @@ import re
 note_dir = Path(r"D:\doubaoziliao\xuexijihua")
 md_files = list(note_dir.glob("**/*.md"))
 
-
-chroma_client = chromadb.Client()
-collection = chroma_client.create_collection(name="chunked_note")
+# persistent client数据持久化 change use get_or_create_collection
+chroma_client = chromadb.PersistentClient(path="./chroma_db")
+collection = chroma_client.get_or_create_collection(name="chunked_note")
 
 
 # 先收集所有块，最后一次性加入
@@ -27,18 +27,30 @@ for file_path in md_files:
         all_metas.append({"source": file_path.name})
     print(f"{file_path.name}: {len(chunks)} 块")
 
-collection.add(ids=all_ids, documents=all_docs, metadatas=all_metas)
+# 增加一个判断，如果已经索引过，则跳过
+if collection.count() == 0:
+    for file_path in md_files:
+        collection.add(ids=all_ids, documents=all_docs, metadatas=all_metas)
+    print(f"首次建库，共索引 {collection.count()} 个块")
+else:
+    print(f"已从磁盘加载 {collection.count()} 个块，跳过索引")
+
+
 print(f"\n共索引 {collection.count()} 个块")
+
+# query and get results
 question = "我的学习计划 v2.0 是关于什么的"
 results = collection.query(
     query_texts=[question],
     n_results=6,  # Chroma will embed this for you
 )
 
+# print metadata
 print("\n--- 检索到的来源 ---")
 for meta, dist in zip(results["metadatas"][0], results["distances"][0]):
     print(f"{meta['source']}  距离 {dist:.3f}")
 
+# combine the retrieved documents into a single context string
 context = "\n\n---\n\n".join(results["documents"][0])
 
 
