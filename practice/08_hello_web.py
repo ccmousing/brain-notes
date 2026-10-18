@@ -22,9 +22,12 @@ if question:
     results = collection.query(query_texts=[question], n_results=6)
     context = "\n\n---\n\n".join(results["documents"][0])
 
-    # 调 LLM
-    response = llm.chat.completions.create(
+    # 调 LLM，stream=True 边生成边返回
+    st.subheader("回答")
+    answer = st.empty()
+    stream = llm.chat.completions.create(
         model="deepseek-chat",
+        stream=True,
         messages=[
             {
                 "role": "system",
@@ -33,5 +36,11 @@ if question:
             {"role": "user", "content": question},
         ],
     )
-    st.write("### 回答")
-    st.write(response.choices[0].message.content)
+
+    # 把返回片段拼成生成器，写进占位符逐字显示
+    def gen():
+        for chunk in stream:
+            if chunk.choices[0].delta.content:
+                yield chunk.choices[0].delta.content
+
+    answer.write_stream(gen())
