@@ -56,32 +56,19 @@ uv sync
 # 配置 .env（同上）
 
 # 启动网页
-uv run streamlit run practice/08_hello_web.py
+uv run streamlit run app.py
 ```
 
-## 项目状态
 
-- [x] M1：最小闭环（读单个 md 文件，AI 基于内容回答）
-- [x] M2：RAG 闭环（遍历笔记库 + Chroma 检索 + LLM 回答）
-- [x] M2 优化：按标题切块 + Chroma 持久化
-- [x] M3：Web 界面（Streamlit + 流式输出）
-- [x] M4：Docker 化
-- [ ] M4：推 GitHub 开源
 
 ## 项目结构
 
 ```
-main_agent/
+brain-notes/
 ├── app/
-│   ├── config.py              # 读环境变量
-│   └── prompts/               # prompt 模板
-├── practice/
-│   ├── 01_hello_llm.py         # 最小 LLM 调用
-│   ├── 03_scan_notes.py      # 遍历笔记库
-│   ├── 04_rag_demo.py         # Chroma Quickstart
-│   ├── 06_chunk_notes.py      # 按标题切块验证
-│   ├── 07_chunked_rag.py       # 切块 + 持久化 RAG
-│   └── 08_hello_web.py         # Streamlit 网页版
+│   └── config.py              # 读环境变量
+├── app.py                     # Streamlit 网页入口
+├── build_index.py             # 建向量库脚本
 ├── Dockerfile
 ├── docker-compose.yml
 ├── .env.example               # 环境变量模板
