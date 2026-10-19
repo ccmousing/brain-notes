@@ -38,39 +38,3 @@ else:
 
 
 print(f"\n共索引 {collection.count()} 个块")
-
-# query and get results
-question = "我的学习计划 v2.0 是关于什么的"
-results = collection.query(
-    query_texts=[question],
-    n_results=6,  # Chroma will embed this for you
-)
-
-# print metadata
-print("\n--- 检索到的来源 ---")
-for meta, dist in zip(results["metadatas"][0], results["distances"][0]):
-    print(f"{meta['source']}  距离 {dist:.3f}")
-
-# combine the retrieved documents into a single context string
-context = "\n\n---\n\n".join(results["documents"][0])
-
-
-# create a chat
-llm = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com/v1")
-response = llm.chat.completions.create(
-    model="deepseek-chat",
-    messages=[
-        {
-            "role": "system",
-            "content": f"根据以下笔记内容回答问题，不要编造：\n\n{context}",
-        },
-        {"role": "user", "content": question},
-    ],
-)
-
-# print answer
-
-print("\n=== 问题 ===")
-print(question)
-print("\n=== AI 回答 ===")
-print(response.choices[0].message.content)
