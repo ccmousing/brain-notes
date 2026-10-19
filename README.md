@@ -31,9 +31,13 @@ cd brain-notes
 ```
 
 ### 2. 配置环境变量
-复制 `.env.example` 为 `.env`，填入你的 DeepSeek API Key：
+复制 `.env.example` 为 `.env`，填入你的配置：
 ```
+# DeepSeek API Key（必填）
 DEEPSEEK_API_KEY=sk-xxxxxxxx
+
+# 你的 Obsidian 笔记库路径（必填，建库时读取笔记文件）
+NOTES_DIR=你的笔记库文件夹路径
 ```
 
 ### 3. 启动
