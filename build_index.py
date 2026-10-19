@@ -3,8 +3,9 @@ import chromadb
 from openai import OpenAI
 from app.config import DEEPSEEK_API_KEY
 import re
+import os
 
-note_dir = Path(r"D:\doubaoziliao\xuexijihua")
+note_dir = Path(os.getenv("NOTES_DIR", "./notes"))
 md_files = list(note_dir.glob("**/*.md"))
 
 # persistent client数据持久化 change use get_or_create_collection
