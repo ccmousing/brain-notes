@@ -20,6 +20,6 @@ COPY . .
 EXPOSE 8501
 
 # 容器启动时执行
-CMD ["uv", "run", "streamlit", "run", "practice/08_hello_web.py", "--server.address=0.0.0.0"]
+CMD ["uv", "run", "streamlit", "run", "app.py", "--server.address=0.0.0.0"]
 
 ENV PYTHONPATH=/app
