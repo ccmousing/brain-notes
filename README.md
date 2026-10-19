@@ -40,7 +40,13 @@ DEEPSEEK_API_KEY=sk-xxxxxxxx
 NOTES_DIR=你的笔记库文件夹路径
 ```
 
-### 3. 启动
+### 3. 首次使用：建向量库
+```bash
+docker compose run --rm app python build_index.py
+```
+遍历笔记库，切块，存入 Chroma，只需跑一次。
+
+### 4. 启动
 ```bash
 docker compose up --build
 ```
